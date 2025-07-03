@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Online Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    </head>
+<body>
+    <div class="calculator-container">
+        <header>
+            <h1>Advanced Calculator</h1>
+            <select id="mode-selector">
+                <option value="scientific">Scientific</option>
+                <option value="equations">Equations</option>
+                <option value="functions">Functions</option>
+                <option value="statistics">Statistics</option>
+                <option value="sci-eng">Sci/Eng Tools</option>
+            </select>
+        </header>
+
+        <main>
+            <div class="display">
+                <div class="input-line" id="input-line"></div>
+                <div class="result-line" id="result-line">= 0</div>
+            </div>
+
+            <div id="equations-panel" class="mode-panel hidden">
+                <h3>Simultaneous Linear Equations (2x2)</h3>
+                <div class="equation-row">
+                    <input type="number" class="coeff" id="a1">x + <input type="number" class="coeff" id="b1">y = <input type="number" class="coeff" id="c1">
+                </div>
+                <div class="equation-row">
+                    <input type="number" class="coeff" id="a2">x + <input type="number" class="coeff" id="b2">y = <input type="number" class="coeff" id="c2">
+                </div>
+                <button id="solve-linear">Solve</button>
+                <div id="linear-solution"></div>
+                </div>
+
+            <div id="functions-panel" class="mode-panel hidden">
+                <h3>Function Definition</h3>
+                <label for="function-input">f(x) = </label><input type="text" id="function-input" placeholder="e.g., x^2 + 2*x - 1">
+                <button id="define-function">Define</button>
+
+                <h3>Evaluate f(x)</h3>
+                <label for="x-value">x = </label><input type="number" id="x-value">
+                <button id="evaluate-function">Calculate f(x)</button>
+                <div id="function-result"></div>
+                </div>
+
+            <div id="statistics-panel" class="mode-panel hidden">
+                <h3>Data Input</h3>
+                <textarea id="data-input" placeholder="Enter numbers separated by commas or newlines"></textarea>
+                <button id="analyze-data">Analyze</button>
+                <div id="stats-results"></div>
+            </div>
+
+            <div id="sci-eng-panel" class="mode-panel hidden">
+                <h3>Unit Conversions</h3>
+                <h3>Physical Constants</h3>
+                </div>
+
+            <div class="keypad" id="main-keypad">
+                <button class="btn clear" data-action="clear">AC</button>
+                <button class="btn del" data-action="delete">DEL</button>
+                <button class="btn func" data-action="ans">Ans</button>
+                <button class="btn operator" data-op="/">/</button>
+
+                <button class="btn func" data-action="sqrt">√</button>
+                <button class="btn func" data-action="power">x^y</button>
+                <button class="btn func" data-action="pi">π</button>
+                <button class="btn operator" data-op="*">*</button>
+
+                <button class="btn num">7</button>
+                <button class="btn num">8</button>
+                <button class="btn num">9</button>
+                <button class="btn operator" data-op="-">-</button>
+
+                <button class="btn num">4</button>
+                <button class="btn num">5</button>
+                <button class="btn num">6</button>
+                <button class="btn operator" data-op="+">+</button>
+
+                <button class="btn num">1</button>
+                <button class="btn num">2</button>
+                <button class="btn num">3</button>
+                <button class="btn equals" data-action="calculate">=</button>
+
+                <button class="btn func" data-action="paren-open">(</button>
+                <button class="btn num">0</button>
+                <button class="btn num" data-action="decimal">.</button>
+                <button class="btn func" data-action="paren-close">)</button>
+
+                <div class="advanced-scientific-keys">
+                    <button class="btn func" data-action="sin">sin</button>
+                    <button class="btn func" data-action="cos">cos</button>
+                    <button class="btn func" data-action="tan">tan</button>
+                    <button class="btn func" data-action="log">log</button>
+                    <button class="btn func" data-action="ln">ln</button>
+                    <button class="btn func" data-action="factorial">x!</button>
+                    <button class="btn func shift-btn" data-action="shift">Shift</button>
+                    <button class="btn func mem" data-action="m-plus">M+</button>
+                    <button class="btn func mem" data-action="m-minus">M-</button>
+                    <button class="btn func mem" data-action="mr">MR</button>
+                    <button class="btn func mem" data-action="mc">MC</button>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Advanced Online Calculator. <a href="manual.html">User Manual</a></p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

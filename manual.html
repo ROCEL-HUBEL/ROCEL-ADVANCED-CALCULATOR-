@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Calculator User Manual</title>
+    <link rel="stylesheet" href="manual-style.css"> </head>
+<body>
+    <div class="manual-container">
+        <header>
+            <h1>Advanced Calculator User Manual</h1>
+            <nav class="manual-nav">
+                <a href="#intro">Introduction</a> |
+                <a href="#scientific">Scientific Mode</a> |
+                <a href="#equations">Equation Solver</a> |
+                <a href="#functions">Functions Mode</a> |
+                <a href="#statistics">Statistics Mode</a> |
+                <a href="#sci-eng">Sci/Eng Tools</a> |
+                <a href="#troubleshooting">Troubleshooting</a> |
+                <a href="index.html">Back to Calculator</a>
+            </nav>
+        </header>
+
+        <main>
+            <section id="intro">
+                <h2>1. Introduction</h2>
+                <p>Welcome to the Advanced Online Calculator! This powerful tool is designed to assist students, engineers, and professionals with a wide range of mathematical computations, from basic arithmetic to complex equations, statistical analysis, and scientific calculations.</p>
+                <p>This manual will guide you through all the features and modes of the calculator, helping you maximize its potential.</p>
+            </section>
+
+            <section id="scientific">
+                <h2>2. Scientific Mode</h2>
+                <p>This is the default mode, providing all standard scientific calculator functions.</p>
+                <h3>2.1 Basic Operations</h3>
+                <p>Use the number pad (0-9) and operators (+, -, *, /) for basic calculations. Press '=' to get the result.</p>
+                <div class="example-code">
+                    <code>Input: 15 + 7 * (3 - 1)</code><br>
+                    <code>Result: 29</code>
+                </div>
+                <h3>2.2 Powers and Roots</h3>
+                <ul>
+                    <li><strong>x^y:</strong> Use this button for general powers. Enter the base, press 'x^y', then the exponent. E.g., <code>2 x^y 3 = 8</code></li>
+                    <li><strong>√ (Square Root):</strong> Press the '√' button, then the number, then ')', then '='. E.g., <code>√ ( 9 ) = 3</code></li>
+                    <li><strong>Handling Surds:</strong> The calculator attempts to simplify surds. For example, entering <code>sqrt(8)</code> will display <code>2√2</code> if possible, or its decimal approximation if not. Operations like <code>2√3 + √3</code> will simplify to <code>3√3</code>.</li>
+                </ul>
+                </section>
+
+            <section id="equations">
+                <h2>3. Equation Solver Mode</h2>
+                <p>Switch to this mode using the "Mode" selector at the top. This mode helps you solve various types of equations.</p>
+                <h3>3.1 Simultaneous Linear Equations (2x2 and 3x3)</h3>
+                <p>Enter the coefficients for each equation in the provided input fields. For a 2x2 system:</p>
+                <p><code>a₁x + b₁y = c₁</code></p>
+                <p><code>a₂x + b₂y = c₂</code></p>
+                <p>Fill in the values for <code>a1, b1, c1, a2, b2, c2</code>, then click "Solve".</p>
+                <div class="example-code">
+                    <code>Equation 1: 2x + 3y = 7</code><br>
+                    <code>Equation 2: 4x + 1y = 9</code><br>
+                    <code>(Enter a1=2, b1=3, c1=7, a2=4, b2=1, c2=9)</code><br>
+                    <code>Solution: x = 2.0000, y = 1.0000</code>
+                </div>
+                </section>
+
+            <section id="functions">
+                <h2>4. Functions Mode</h2>
+                <p>Define and evaluate functions, or generate tables of values.</p>
+                <h3>4.1 Defining a Function</h3>
+                <p>In the "Function Definition" section, type your function using 'x' as the variable (e.g., <code>x^2 + 2*x - 1</code>). Click "Define".</p>
+                <h3>4.2 Evaluating a Function</h3>
+                <p>Once a function is defined, enter a value for 'x' in the "Evaluate f(x)" section and click "Calculate f(x)".</p>
+                </section>
+
+            <section id="statistics">
+                <h2>5. Statistics Mode</h2>
+                <p>Enter a set of data points to calculate various statistical measures.</p>
+                <h3>5.1 Entering Data</h3>
+                <p>Type your numbers into the "Data Input" text area. Separate numbers by commas or by placing them on new lines.</p>
+                <div class="example-code">
+                    <code>Input: 10, 12, 12, 15, 17, 18, 20</code>
+                </div>
+                <h3>5.2 Analyzing Data</h3>
+                <p>Click "Analyze" to see results for Mean, Median, Mode, Standard Deviation, Variance, Min, Max, and Count.</p>
+            </section>
+
+            <section id="sci-eng">
+                <h2>6. Scientific & Engineering Tools</h2>
+                <p>This mode provides access to common physical constants and unit conversion tools.</p>
+                <h3>6.1 Unit Conversions</h3>
+                <p>Select the unit category (e.g., Length), then choose your "From Unit" and "To Unit". Enter the value you wish to convert and click "Convert".</p>
+                <h3>6.2 Physical Constants</h3>
+                <p>A list of frequently used physical constants (e.g., Speed of Light, Avogadro's Number) is available for quick reference.</p>
+            </section>
+
+            <section id="troubleshooting">
+                <h2>7. Troubleshooting & FAQs</h2>
+                <ul>
+                    <li><strong>"Why is my answer a decimal and not a surd?"</strong><br>
+                        The calculator attempts surd simplification for certain operations (like square roots). However, not all expressions can be simplified into exact surd form, or the result might be irrational in a way that doesn't simplify nicely (e.g., π). If you expect an exact surd and don't get one, it might not be mathematically possible to represent it that way, or the expression is too complex for the calculator's current simplification engine.</li>
+                    <li><strong>"My equation isn't solving."</strong><br>
+                        Check your input carefully for typos. For linear equations, ensure the system has a unique solution (i.e., not parallel or identical lines). For general equations, a good initial guess can sometimes help.</li>
+                    <li><strong>"Error" message displayed.</strong><br>
+                        This usually indicates a syntax error in your input (e.g., unmatched parentheses, invalid operation like division by zero, or an operation on non-numbers). Clear the display and re-enter.</li>
+                </ul>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 Advanced Online Calculator. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
