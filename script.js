@@ -8,207 +8,187 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentExpression = '';
     let lastResult = '0';
     let memoryValue = 0;
-    let shiftActive = false; // For 2nd functions
+    let shiftActive = false;
 
-    // --- Core Calculator Logic (Scientific Mode) ---
+    // --- Helper Functions ---
+    const updateDisplay = () => {
+        inputLine.textContent = currentExpression === '' ? '0' : currentExpression;
+        resultLine.textContent = `= ${lastResult}`;
+    };
+
+    const clearAll = () => {
+        currentExpression = '';
+        lastResult = '0';
+        updateDisplay();
+    };
+
+    const deleteLast = () => {
+        currentExpression = currentExpression.slice(0, -1);
+        if (currentExpression === '') {
+            lastResult = '0'; // Reset result if expression is empty
+        }
+        updateDisplay();
+    };
+
+    const calculateResult = () => {
+        try {
+            if (currentExpression.trim() === '') {
+                lastResult = '0';
+                return;
+            }
+            // Replace Ans with its value
+            let expressionToEvaluate = currentExpression.replace(/Ans/g, `(${lastResult})`);
+
+            // Handle power operator ^ by converting to ** for math.evaluate
+            expressionToEvaluate = expressionToEvaluate.replace(/\^/g, '**');
+
+            const result = math.evaluate(expressionToEvaluate);
+
+            let formattedResult = result.toString();
+
+            // Attempt to simplify if the result is a Fraction or a complex number might be formatted
+            if (typeof result === 'object' && result.type === 'Fraction') {
+                formattedResult = result.toFraction();
+            } else if (typeof result === 'object' && result.type === 'Complex') {
+                // Math.js automatically formats complex numbers as "a + bi"
+                formattedResult = result.toString();
+            }
+            // For Surds, math.js might return a number if evaluated,
+            // or you'd need specific symbolic simplification (more advanced).
+            // For now, rely on math.evaluate to give a numerical result.
+
+            lastResult = formattedResult;
+            resultLine.textContent = `= ${lastResult}`;
+            currentExpression = lastResult; // Allow chaining calculations
+        } catch (error) {
+            resultLine.textContent = `= Error`;
+            currentExpression = '';
+            console.error("Calculation error:", error);
+        }
+    };
+
+    // --- Keypad Event Listener ---
     keypad.addEventListener('click', (e) => {
         const button = e.target;
         if (!button.classList.contains('btn')) return;
 
         const value = button.textContent;
         const action = button.dataset.action;
-        const operator = button.dataset.op;
+        const op = button.dataset.op;
 
-        if (operator) {
-            currentExpression += operator;
-        } else if (action) {
-            handleAction(action);
-        } else if (button.classList.contains('num')) {
+        if (action) {
+            switch (action) {
+                case 'clear':
+                    clearAll();
+                    break;
+                case 'delete':
+                    deleteLast();
+                    break;
+                case 'calculate':
+                    calculateResult();
+                    break;
+                case 'ans':
+                    currentExpression += 'Ans';
+                    break;
+                case 'power':
+                    currentExpression += '^';
+                    break;
+                case 'sqrt':
+                    currentExpression += 'sqrt(';
+                    break;
+                case 'decimal':
+                    if (currentExpression === '' || /[+\-*/^]$/.test(currentExpression)) {
+                        currentExpression += '0.'; // Prevent starting with just '.'
+                    } else if (!currentExpression.split(/[\+\-\*\/^()]/).pop().includes('.')) {
+                        currentExpression += '.';
+                    }
+                    break;
+                case 'paren-open':
+                    currentExpression += '(';
+                    break;
+                case 'paren-close':
+                    currentExpression += ')';
+                    break;
+                case 'sin':
+                    currentExpression += 'sin(';
+                    break;
+                case 'cos':
+                    currentExpression += 'cos(';
+                    break;
+                case 'tan':
+                    currentExpression += 'tan(';
+                    break;
+                case 'log':
+                    currentExpression += 'log10('; // Common log (base 10)
+                    break;
+                case 'ln':
+                    currentExpression += 'log('; // Natural log (base e)
+                    break;
+                case 'factorial':
+                    currentExpression += '!'; // For math.js, this works directly
+                    break;
+                case 'pi':
+                    currentExpression += 'pi'; // math.js recognizes 'pi'
+                    break;
+                case 'e':
+                    currentExpression += 'e'; // math.js recognizes 'e'
+                    break;
+                case 'shift':
+                    shiftActive = !shiftActive;
+                    // You'd typically change button texts here, e.g., sin to asin
+                    button.classList.toggle('active', shiftActive);
+                    break;
+                case 'm-plus':
+                    try { memoryValue += math.evaluate(currentExpression); } catch (e) { console.error("Memory error:", e); }
+                    currentExpression = '';
+                    lastResult = memoryValue.toString();
+                    resultLine.textContent = `= M+ ${lastResult}`;
+                    break;
+                case 'm-minus':
+                    try { memoryValue -= math.evaluate(currentExpression); } catch (e) { console.error("Memory error:", e); }
+                    currentExpression = '';
+                    lastResult = memoryValue.toString();
+                    resultLine.textContent = `= M- ${lastResult}`;
+                    break;
+                case 'mr': // Memory Recall
+                    currentExpression += memoryValue.toString();
+                    break;
+                case 'mc': // Memory Clear
+                    memoryValue = 0;
+                    currentExpression = '';
+                    lastResult = '0';
+                    resultLine.textContent = `= M Cleared`;
+                    break;
+                default:
+                    currentExpression += value;
+            }
+        } else if (op) {
+            currentExpression += op;
+        } else if (value) {
             currentExpression += value;
-        } else if (button.classList.contains('func')) {
-            handleFunction(value);
         }
-
-        inputLine.textContent = currentExpression;
-        // For simplicity, auto-calculate or only calculate on '='
-        if (operator === '=' || action === 'calculate') {
-             calculateResult();
-        } else {
-             // For dynamic updates, might need a more sophisticated parser
-             // calculateIntermediateResult();
-        }
+        updateDisplay();
     });
-
-    function handleAction(action) {
-        switch (action) {
-            case 'clear':
-                currentExpression = '';
-                resultLine.textContent = '= 0';
-                lastResult = '0';
-                break;
-            case 'delete':
-                currentExpression = currentExpression.slice(0, -1);
-                break;
-            case 'calculate':
-                calculateResult();
-                break;
-            case 'ans':
-                currentExpression += `(${lastResult})`; // Use previous result
-                break;
-            case 'paren-open':
-                currentExpression += '(';
-                break;
-            case 'paren-close':
-                currentExpression += ')';
-                break;
-            case 'decimal':
-                // Basic check to prevent multiple decimals in a number
-                const lastNumMatch = currentExpression.match(/(\d+\.?\d*|\d*)$/);
-                if (lastNumMatch && !lastNumMatch[0].includes('.')) {
-                    currentExpression += '.';
-                } else if (!lastNumMatch) { // Start a new number with decimal
-                     currentExpression += '0.';
-                }
-                break;
-            case 'shift':
-                shiftActive = !shiftActive;
-                // Add visual feedback for shift button
-                button.classList.toggle('active', shiftActive);
-                // Dynamically change text of some buttons (e.g., sin -> asin)
-                // This would be more complex and require mapping
-                break;
-            // Memory functions
-            case 'm-plus':
-                try { memoryValue += parseFloat(lastResult); } catch (e) { console.error(e); }
-                break;
-            case 'm-minus':
-                try { memoryValue -= parseFloat(lastResult); } catch (e) { console.error(e); }
-                break;
-            case 'mr':
-                currentExpression += memoryValue.toString();
-                break;
-            case 'mc':
-                memoryValue = 0;
-                break;
-            case 'sqrt':
-                currentExpression += 'sqrt('; // Expect user to close paren
-                break;
-            case 'power':
-                currentExpression += '^';
-                break;
-            case 'pi':
-                currentExpression += Math.PI.toString();
-                break;
-            // ... more actions
-        }
-    }
-
-    function handleFunction(funcName) {
-        let actualFunc = funcName.toLowerCase();
-        if (shiftActive) {
-            // Map shifted functions (e.g., sin -> asin)
-            switch (actualFunc) {
-                case 'sin': actualFunc = 'asin'; break;
-                case 'cos': actualFunc = 'acos'; break;
-                case 'tan': actualFunc = 'atan'; break;
-                case 'log': actualFunc = '10^'; break; // Placeholder for 10^x
-                case 'ln': actualFunc = 'e^'; break; // Placeholder for e^x
-                // ... other shifted functions
-            }
-        }
-
-        switch (actualFunc) {
-            case 'sin':
-            case 'cos':
-            case 'tan':
-            case 'log':
-            case 'ln':
-            case 'asin':
-            case 'acos':
-            case 'atan':
-            case 'factorial':
-                currentExpression += `${actualFunc}(`; // Add function call and open paren
-                break;
-            // ... more functions
-            case 'x!': // Specific case for factorial button
-                currentExpression += '!'; // Add after number
-                break;
-        }
-        shiftActive = false; // Reset shift after use
-        document.querySelector('.shift-btn').classList.remove('active');
-    }
-
-    function calculateResult() {
-        try {
-            // IMPORTANT: eval() is DANGEROUS for user input.
-            // A robust calculator needs a SAFE expression parser (e.g., math.js).
-            // This is just for demonstration.
-            let expressionToEval = currentExpression.replace(/π/g, 'Math.PI')
-                                                  .replace(/e\^/g, 'Math.exp')
-                                                  .replace(/\^/g, '**'); // JS power operator
-
-            // Basic function replacements (requires more sophisticated parsing for nested calls)
-            expressionToEval = expressionToEval.replace(/sqrt\(([^)]+)\)/g, 'Math.sqrt($1)');
-            expressionToEval = expressionToEval.replace(/sin\(([^)]+)\)/g, 'Math.sin($1)');
-            expressionToEval = expressionToEval.replace(/cos\(([^)]+)\)/g, 'Math.cos($1)');
-            expressionToEval = expressionToEval.replace(/tan\(([^)]+)\)/g, 'Math.tan($1)');
-            expressionToEval = expressionToEval.replace(/log\(([^)]+)\)/g, 'Math.log10($1)'); // Base 10 log
-            expressionToEval = expressionToEval.replace(/ln\(([^)]+)\)/g, 'Math.log($1)');   // Natural log
-
-            // Factorial (simple implementation for positive integers)
-            expressionToEval = expressionToEval.replace(/(\d+)!/g, (match, num) => {
-                let n = parseInt(num);
-                if (n < 0) throw new Error("Factorial of negative number!");
-                if (n === 0) return 1;
-                let res = 1;
-                for (let i = 2; i <= n; i++) res *= i;
-                return res;
-            });
-
-
-            let result = eval(expressionToEval); // DANGER ZONE!
-            if (isNaN(result) || !isFinite(result)) {
-                throw new Error("Invalid calculation");
-            }
-
-            // Surd simplification (conceptual - extremely complex without a CAS library)
-            // if (Math.abs(result - Math.round(result)) < 1e-9) { // Check if it's an integer
-            //     // Example: sqrt(8) -> 2 * Math.sqrt(2)
-            //     // This requires prime factorization and radical simplification logic
-            //     // E.g., simplifySqrt(8) -> "2√2"
-            //     result = simplifySurd(result); // Placeholder for advanced surd simplification
-            // }
-
-
-            lastResult = result.toString();
-            resultLine.textContent = `= ${lastResult}`;
-            currentExpression = lastResult; // Set current expression to the result for chaining
-        } catch (error) {
-            resultLine.textContent = `= Error`;
-            currentExpression = ''; // Clear expression on error
-            console.error("Calculation error:", error);
-        }
-    }
 
     // --- Mode Switching Logic ---
     modeSelector.addEventListener('change', (e) => {
         const selectedMode = e.target.value;
 
-        // Hide all mode panels
+        // Hide all mode panels first
         modePanels.forEach(panel => panel.classList.add('hidden'));
 
-        // Show the selected mode panel
+        // Show the selected mode's panel
         const targetPanelId = `${selectedMode}-panel`;
         const targetPanel = document.getElementById(targetPanelId);
         if (targetPanel) {
             targetPanel.classList.remove('hidden');
         }
 
-        // Adjust keypad visibility if needed (e.g., hide some buttons for non-scientific modes)
-        // For this design, keypad is always visible, but mode panels appear above it.
+        // For "scientific" mode, ensure keypad is fully visible (though it's always there in this design)
+        // For other modes, we might need to adjust keypad visibility or size if panels take up more space.
     });
 
-    // --- Mode-Specific Functionality (Placeholders) ---
+    // --- Mode-Specific Functionality ---
 
     // Equations Mode
     document.getElementById('solve-linear')?.addEventListener('click', () => {
@@ -218,15 +198,44 @@ document.addEventListener('DOMContentLoaded', () => {
         const a2 = parseFloat(document.getElementById('a2').value);
         const b2 = parseFloat(document.getElementById('b2').value);
         const c2 = parseFloat(document.getElementById('c2').value);
+        const solutionDiv = document.getElementById('linear-solution');
 
-        // Basic 2x2 linear solver (Cramer's rule or substitution)
-        const det = a1 * b2 - a2 * b1;
-        if (det === 0) {
-            document.getElementById('linear-solution').textContent = "No unique solution (parallel or same lines)";
-        } else {
-            const x = (c1 * b2 - c2 * b1) / det;
-            const y = (a1 * c2 - a2 * c1) / det;
-            document.getElementById('linear-solution').textContent = `x = ${x.toFixed(4)}, y = ${y.toFixed(4)}`;
+        if (isNaN(a1) || isNaN(b1) || isNaN(c1) || isNaN(a2) || isNaN(b2) || isNaN(c2)) {
+            solutionDiv.textContent = 'Please enter all coefficients.';
+            return;
+        }
+
+        try {
+            // Using math.js for matrix-based linear equation solving
+            const A = math.matrix([[a1, b1], [a2, b2]]);
+            const B = math.matrix([c1, c2]);
+            const X = math.lusolve(A, B); // LU decomposition solver
+
+            solutionDiv.textContent = `x = ${X.get([0]).toFixed(4)}, y = ${X.get([1]).toFixed(4)}`;
+        } catch (e) {
+            solutionDiv.textContent = 'No unique solution or error: ' + e.message;
+        }
+    });
+
+    document.getElementById('solve-general-equation')?.addEventListener('click', () => {
+        const equationString = document.getElementById('general-equation-input').value;
+        const solutionDiv = document.getElementById('general-equation-solution');
+        try {
+            // This is for numerical solving (finding roots where expression = 0)
+            // math.js's solve is for linear systems or symbolic (if it can)
+            // For general numerical root finding (f(x)=0), you'd usually use an iterative method
+            // or a specialized library. math.js doesn't have a direct `solve(equationString, variable)` for this.
+            // Conceptual approach, this will likely require more complex parsing or a different library.
+            // A common approach would be to define a function and find its zero.
+            // Example using math.js's parse for conceptual function evaluation:
+            // const f = math.parse(equationString.replace(/=0$/, '')); // remove '=0' if present
+            // const findRoot = (func, guess) => { /* Implement Newton-Raphson or bisection */ };
+            // solutionDiv.textContent = `Solution (conceptual): x ≈ ${findRoot(f, 0.1)}`;
+
+            solutionDiv.textContent = 'Numerical solver for general equations is conceptual. Please input simpler equations or use the scientific mode for direct calculation.';
+
+        } catch (e) {
+            solutionDiv.textContent = 'Error solving equation: ' + e.message;
         }
     });
 
@@ -235,10 +244,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('define-function')?.addEventListener('click', () => {
         const funcString = document.getElementById('function-input').value;
         try {
-            // Again, use a safe parser for eval, e.g., definedFunction = new Function('x', `return ${funcString};`);
-            // This is just a conceptual placeholder
-            definedFunction = (x) => eval(funcString.replace(/x/g, `(${x})`)); // UNSAFE!
-            alert('Function defined!');
+            // Parse the function string for later evaluation
+            definedFunction = math.parse(funcString);
+            alert(`Function f(x) = ${funcString} defined!`);
         } catch (e) {
             alert('Error defining function: ' + e.message);
             definedFunction = null;
@@ -246,82 +254,290 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('evaluate-function')?.addEventListener('click', () => {
-        if (!definedFunction) {
-            document.getElementById('function-result').textContent = 'Please define a function first.';
+        const xValue = parseFloat(document.getElementById('x-value').value);
+        const resultDiv = document.getElementById('function-result');
+
+        if (definedFunction === null) {
+            resultDiv.textContent = 'Please define a function first.';
             return;
         }
-        const xVal = parseFloat(document.getElementById('x-value').value);
-        if (isNaN(xVal)) {
-            document.getElementById('function-result').textContent = 'Please enter a valid x value.';
+        if (isNaN(xValue)) {
+            resultDiv.textContent = 'Please enter a numerical value for x.';
+            return;
+        }
+
+        try {
+            // Evaluate the parsed function with the given scope
+            const scope = { x: xValue };
+            const result = definedFunction.evaluate(scope);
+            resultDiv.textContent = `f(${xValue}) = ${result.toString()}`;
+        } catch (e) {
+            resultDiv.textContent = 'Error evaluating function: ' + e.message;
+        }
+    });
+
+    document.getElementById('derive-function')?.addEventListener('click', () => {
+        const funcString = document.getElementById('function-input').value;
+        const resultDiv = document.getElementById('derivative-result');
+        if (!funcString) {
+            resultDiv.textContent = 'Please define a function first.';
             return;
         }
         try {
-            const result = definedFunction(xVal);
-            document.getElementById('function-result').textContent = `f(${xVal}) = ${result.toFixed(4)}`;
+            // math.js can do symbolic differentiation
+            const derivative = math.derivative(funcString, 'x');
+            resultDiv.textContent = `Derivative: ${derivative.toString()}`;
         } catch (e) {
-            document.getElementById('function-result').textContent = 'Error evaluating function: ' + e.message;
+            resultDiv.textContent = 'Error deriving function: ' + e.message;
         }
     });
 
     // Statistics Mode
     document.getElementById('analyze-data')?.addEventListener('click', () => {
         const dataInput = document.getElementById('data-input').value;
-        const data = dataInput.split(/,|\n/).map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
+        const statsResultsDiv = document.getElementById('stats-results');
+        const numbers = dataInput.split(/,|\n/).map(s => parseFloat(s.trim())).filter(n => !isNaN(n));
 
-        if (data.length === 0) {
-            document.getElementById('stats-results').textContent = 'No valid data entered.';
+        if (numbers.length === 0) {
+            statsResultsDiv.textContent = 'No valid numbers entered.';
             return;
         }
 
-        data.sort((a, b) => a - b); // For median
+        try {
+            const mean = math.mean(numbers);
+            const median = math.median(numbers);
+            const stdev = math.std(numbers); // Sample standard deviation
+            const variance = math.variance(numbers); // Sample variance
+            const min = math.min(numbers);
+            const max = math.max(numbers);
+            const sum = math.sum(numbers);
 
-        const n = data.length;
-        const sum = data.reduce((acc, val) => acc + val, 0);
-        const mean = sum / n;
-
-        // Median
-        let median;
-        if (n % 2 === 0) {
-            median = (data[n / 2 - 1] + data[n / 2]) / 2;
-        } else {
-            median = data[Math.floor(n / 2)];
+            statsResultsDiv.innerHTML = `
+                <p>Count: ${numbers.length}</p>
+                <p>Mean: ${mean.toFixed(4)}</p>
+                <p>Median: ${median.toFixed(4)}</p>
+                <p>Std Dev: ${stdev.toFixed(4)}</p>
+                <p>Variance: ${variance.toFixed(4)}</p>
+                <p>Min: ${min}</p>
+                <p>Max: ${max}</p>
+                <p>Sum: ${sum}</p>
+            `;
+        } catch (e) {
+            statsResultsDiv.textContent = 'Error analyzing data: ' + e.message;
         }
-
-        // Mode (simple)
-        const counts = {};
-        data.forEach(d => { counts[d] = (counts[d] || 0) + 1; });
-        let mode = [];
-        let maxCount = 0;
-        for (const num in counts) {
-            if (counts[num] > maxCount) {
-                maxCount = counts[num];
-                mode = [parseFloat(num)];
-            } else if (counts[num] === maxCount && maxCount > 1) {
-                mode.push(parseFloat(num));
-            }
-        }
-        const modeStr = mode.length === 0 ? 'No mode' : (mode.length === Object.keys(counts).length ? 'No unique mode' : mode.join(', '));
-
-
-        // Standard Deviation (sample)
-        const sumSqDiff = data.reduce((acc, val) => acc + Math.pow(val - mean, 2), 0);
-        const variance = n > 1 ? sumSqDiff / (n - 1) : 0;
-        const stdDev = Math.sqrt(variance);
-
-        document.getElementById('stats-results').innerHTML = `
-            <p>Count (n): ${n}</p>
-            <p>Mean: ${mean.toFixed(4)}</p>
-            <p>Median: ${median.toFixed(4)}</p>
-            <p>Mode: ${modeStr}</p>
-            <p>Standard Deviation (sample): ${stdDev.toFixed(4)}</p>
-            <p>Variance (sample): ${variance.toFixed(4)}</p>
-            <p>Min: ${data[0]}</p>
-            <p>Max: ${data[data.length - 1]}</p>
-        `;
     });
 
-    // Initialize to Scientific mode
-    modeSelector.value = 'scientific';
-    document.getElementById('scientific-panel')?.classList.remove('hidden'); // Assuming scientific panel doesn't exist, just the main keypad
 
+    // Matrices Mode
+    let matrixA = null;
+    let matrixB = null;
+
+    function getMatrixFromInputs(prefix, rows = 2, cols = 2) {
+        const matrixData = [];
+        for (let i = 1; i <= rows; i++) {
+            const row = [];
+            for (let j = 1; j <= cols; j++) {
+                const value = parseFloat(document.getElementById(`${prefix}${i}${j}`).value);
+                if (isNaN(value)) throw new Error('Invalid matrix input. Please fill all cells with numbers.');
+                row.push(value);
+            }
+            matrixData.push(row);
+        }
+        return math.matrix(matrixData); // Create math.js matrix
+    }
+
+    document.getElementById('set-matrix-a')?.addEventListener('click', () => {
+        try { matrixA = getMatrixFromInputs('ma'); alert('Matrix A set!'); } catch (e) { alert(e.message); }
+    });
+    document.getElementById('set-matrix-b')?.addEventListener('click', () => {
+        try { matrixB = getMatrixFromInputs('mb'); alert('Matrix B set!'); } catch (e) { alert(e.message); }
+    });
+
+    document.getElementById('matrix-add')?.addEventListener('click', () => {
+        if (!matrixA || !matrixB) { alert('Define both matrices first.'); return; }
+        try {
+            const result = math.add(matrixA, matrixB);
+            document.getElementById('matrix-result').textContent = `A + B = ${result.toString()}`;
+        } catch (e) { document.getElementById('matrix-result').textContent = 'Error: ' + e.message; }
+    });
+
+    document.getElementById('matrix-multiply')?.addEventListener('click', () => {
+        if (!matrixA || !matrixB) { alert('Define both matrices first.'); return; }
+        try {
+            const result = math.multiply(matrixA, matrixB);
+            document.getElementById('matrix-result').textContent = `A * B = ${result.toString()}`;
+        } catch (e) { document.getElementById('matrix-result').textContent = 'Error: ' + e.message; }
+    });
+
+    document.getElementById('matrix-inverse')?.addEventListener('click', () => {
+        if (!matrixA) { alert('Define Matrix A first.'); return; }
+        try {
+            const result = math.inv(matrixA);
+            document.getElementById('matrix-result').textContent = `Inverse A = ${result.toString()}`;
+        } catch (e) { document.getElementById('matrix-result').textContent = 'Error: ' + e.message; }
+    });
+
+    document.getElementById('matrix-determinant')?.addEventListener('click', () => {
+        if (!matrixA) { alert('Define Matrix A first.'); return; }
+        try {
+            const result = math.det(matrixA);
+            document.getElementById('matrix-result').textContent = `Determinant A = ${result.toString()}`;
+        } catch (e) { document.getElementById('matrix-result').textContent = 'Error: ' + e.message; }
+    });
+
+    // Unit Converter Mode
+    const unitCategories = {
+        length: ['meter', 'kilometer', 'centimeter', 'millimeter', 'micrometer', 'nanometer', 'mile', 'yard', 'foot', 'inch', 'nautical mile'],
+        mass: ['kilogram', 'gram', 'milligram', 'microgram', 'tonne', 'pound', 'ounce', 'stone'],
+        temperature: ['celsius', 'fahrenheit', 'kelvin'],
+        volume: ['cubic meter', 'liter', 'milliliter', 'gallon', 'quart', 'pint', 'fluid ounce', 'cubic inch'],
+        time: ['second', 'minute', 'hour', 'day', 'week', 'year'],
+        area: ['square meter', 'square kilometer', 'square mile', 'acre', 'hectare'],
+        energy: ['joule', 'kilojoule', 'calorie', 'kilocalorie', 'electronvolt', 'btu'],
+        // Add more categories and units as needed, ensuring math.js supports them
+    };
+
+    const fromUnitCategory = document.getElementById('from-unit-category');
+    const fromUnitSelect = document.getElementById('from-unit-select');
+    const toUnitSelect = document.getElementById('to-unit-select');
+
+    function populateUnitSelects(category) {
+        fromUnitSelect.innerHTML = '';
+        toUnitSelect.innerHTML = '';
+        if (category && unitCategories[category]) {
+            unitCategories[category].forEach(unit => {
+                const option1 = document.createElement('option');
+                option1.value = unit;
+                option1.textContent = unit.charAt(0).toUpperCase() + unit.slice(1); // Capitalize
+                fromUnitSelect.appendChild(option1);
+
+                const option2 = document.createElement('option');
+                option2.value = unit;
+                option2.textContent = unit.charAt(0).toUpperCase() + unit.slice(1);
+                toUnitSelect.appendChild(option2);
+            });
+        }
+    }
+
+    fromUnitCategory?.addEventListener('change', (e) => {
+        populateUnitSelects(e.target.value);
+    });
+
+    document.getElementById('convert-unit')?.addEventListener('click', () => {
+        const value = parseFloat(document.getElementById('unit-value').value);
+        const fromUnit = fromUnitSelect.value;
+        const toUnit = toUnitSelect.value;
+
+        if (isNaN(value) || !fromUnit || !toUnit) {
+            document.getElementById('unit-conversion-result').textContent = 'Please enter value and select units.';
+            return;
+        }
+
+        try {
+            const result = math.unit(value, fromUnit).to(toUnit);
+            document.getElementById('unit-conversion-result').textContent = `${value} ${fromUnit} = ${result.toString()}`;
+        } catch (e) {
+            document.getElementById('unit-conversion-result').textContent = 'Error: ' + e.message;
+        }
+    });
+
+    // Premium Features Mode
+
+    // Currency Converter (Mock data for preview, real implementation needs API and potentially backend)
+    // In a real application, you'd fetch this from a reliable currency API.
+    async function fetchCurrencies() {
+        // Mock data to simulate API response for preview
+        const mockCurrencies = ['USD', 'EUR', 'GBP', 'JPY', 'CAD', 'AUD', 'GHS', 'NGN', 'ZAR', 'KES'];
+        const fromCurrencySelect = document.getElementById('from-currency');
+        const toCurrencySelect = document.getElementById('to-currency');
+
+        mockCurrencies.forEach(currency => {
+            const option1 = document.createElement('option');
+            option1.value = currency;
+            option1.textContent = currency;
+            fromCurrencySelect.appendChild(option1);
+
+            const option2 = document.createElement('option');
+            option2.value = currency;
+            option2.textContent = currency;
+            toCurrencySelect.appendChild(option2);
+        });
+        // Select USD and GHS as default for demonstration
+        fromCurrencySelect.value = 'USD';
+        toCurrencySelect.value = 'GHS';
+    }
+    fetchCurrencies(); // Call on load
+
+    document.getElementById('convert-currency')?.addEventListener('click', async () => {
+        const amount = parseFloat(document.getElementById('currency-amount').value);
+        const from = document.getElementById('from-currency').value;
+        const to = document.getElementById('to-currency').value;
+        const currencyResultDiv = document.getElementById('currency-result');
+
+        if (isNaN(amount) || !from || !to) {
+            currencyResultDiv.textContent = 'Please enter amount and select currencies.';
+            return;
+        }
+
+        currencyResultDiv.textContent = 'Converting...';
+
+        try {
+            // Mock exchange rates (as of July 2025 - illustrative, not real-time)
+            const mockRates = {
+                'USD': { 'EUR': 0.92, 'GBP': 0.79, 'JPY': 158.0, 'GHS': 15.0, 'NGN': 1500.0, 'ZAR': 18.5, 'KES': 130.0 },
+                'EUR': { 'USD': 1.08, 'GBP': 0.86, 'JPY': 171.0, 'GHS': 16.3, 'NGN': 1630.0, 'ZAR': 20.1, 'KES': 141.0 },
+                'GBP': { 'USD': 1.27, 'EUR': 1.16, 'JPY': 200.0, 'GHS': 19.0, 'NGN': 1900.0, 'ZAR': 23.5, 'KES': 165.0 },
+                'JPY': { 'USD': 0.0063, 'EUR': 0.0058, 'GBP': 0.005, 'GHS': 0.095, 'NGN': 9.5, 'ZAR': 0.117, 'KES': 0.82 },
+                'GHS': { 'USD': 0.067, 'EUR': 0.061, 'GBP': 0.053, 'JPY': 10.5, 'NGN': 100.0, 'ZAR': 1.23, 'KES': 8.6 },
+                'NGN': { 'USD': 0.00067, 'EUR': 0.00061, 'GBP': 0.00053, 'JPY': 0.105, 'GHS': 0.01, 'ZAR': 0.0123, 'KES': 0.086 },
+                'ZAR': { 'USD': 0.054, 'EUR': 0.05, 'GBP': 0.043, 'JPY': 8.5, 'GHS': 0.81, 'NGN': 8.1, 'KES': 7.0 },
+                'KES': { 'USD': 0.0077, 'EUR': 0.0071, 'GBP': 0.0061, 'JPY': 1.22, 'GHS': 0.116, 'NGN': 0.116, 'ZAR': 0.14 }
+            };
+
+            let convertedAmount;
+            if (from === to) {
+                convertedAmount = amount; // Same currency
+            } else if (mockRates[from] && mockRates[from][to]) {
+                convertedAmount = amount * mockRates[from][to];
+            } else if (mockRates[to] && mockRates[to][from]) {
+                convertedAmount = amount / mockRates[to][from]; // Inverse conversion
+            } else {
+                throw new Error('Conversion rate not available for selected currencies.');
+            }
+
+            currencyResultDiv.textContent = `${amount} ${from} = ${convertedAmount.toFixed(2)} ${to}`;
+        } catch (e) {
+            currencyResultDiv.textContent = 'Error fetching currency data. ' + e.message;
+            console.error("Currency conversion error:", e);
+        }
+    });
+
+    // Snap & Solve AI (Conceptual - requires advanced backend AI/OCR)
+    document.getElementById('upload-snap-solve')?.addEventListener('click', async () => {
+        const fileInput = document.getElementById('snap-solve-input');
+        const file = fileInput.files[0];
+        const snapSolveResultDiv = document.getElementById('snap-solve-result');
+
+        if (!file) {
+            snapSolveResultDiv.textContent = 'Please select an image file.';
+            return;
+        }
+
+        snapSolveResultDiv.textContent = 'Processing image... (This feature is conceptual and requires advanced AI backend services)';
+
+        // Simulate a delay for AI processing
+        setTimeout(() => {
+            snapSolveResultDiv.textContent = 'Snap & Solve is a premium feature under development. It would use AI to recognize and solve problems from images. Please check back later!';
+        }, 3000);
+    });
+
+    // Initialize to Scientific mode on load
+    modeSelector.value = 'scientific';
+    // Ensure the scientific keypad is the default visible interaction.
+    // Other panels are hidden by default via CSS 'hidden' class.
+    // Call updateDisplay initially to show '0'
+    updateDisplay();
+
+    // Populate initial unit selects
+    populateUnitSelects(fromUnitCategory.value);
 });
