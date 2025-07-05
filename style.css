@@ -1,166 +1,230 @@
-/* Basic Reset & Body Styling */
 body {
-    font-family: 'Open Sans', Arial, sans-serif;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f0f0f0; /* Light background for the page */
+    background: linear-gradient(135deg, #2c3e50, #1a252f);
     margin: 0;
-    padding: 20px;
-    box-sizing: border-box;
+    color: #ECF0F1;
 }
 
-/* Calculator Container */
 .calculator-container {
-    background-color: #2C3E50; /* Deep blue/dark grey */
-    border-radius: 15px;
-    padding: 25px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    background-color: #2D3E4E;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.5);
     width: 100%;
-    max-width: 450px; /* Max width for desktop */
+    max-width: 450px;
+    padding: 25px;
+    box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    overflow: hidden; /* For rounded corners */
+    align-items: center;
 }
 
 header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: #ECF0F1; /* Light text for header */
-}
-
-header h1 {
-    margin: 0;
-    font-size: 1.6em;
-    font-weight: normal;
-}
-
-#mode-selector {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: none;
-    background-color: #34495E; /* Slightly lighter blue */
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
     color: #ECF0F1;
-    cursor: pointer;
-    font-size: 1em;
 }
 
-/* Display Area */
+h1 {
+    font-size: 2em;
+    margin-bottom: 15px;
+    color: #4CAF50; /* A nice green accent */
+}
+
 .display {
-    background-color: #EEF; /* Off-white display */
-    border-radius: 8px;
-    padding: 15px;
+    background-color: #1a252f;
+    border-radius: 10px;
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+    box-sizing: border-box;
     text-align: right;
-    min-height: 80px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    overflow-x: auto; /* Allow horizontal scrolling for long inputs */
-    font-family: 'Roboto Mono', 'Courier New', monospace;
-    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+    overflow: hidden; /* Ensures text doesn't spill */
+    position: relative;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .input-line {
-    font-size: 1.6em;
-    color: #555;
-    min-height: 1.2em; /* Ensure it's always visible */
+    font-size: 1.5em;
+    min-height: 1.5em;
+    color: #BDC3C7;
+    white-space: nowrap;
+    overflow-x: auto; /* Allows horizontal scrolling for long expressions */
+    padding-bottom: 5px; /* Space for scrollbar */
 }
 
 .result-line {
-    font-size: 2.2em;
+    font-size: 2.5em;
     font-weight: bold;
-    color: #222;
+    color: #ECF0F1;
+    min-height: 1.2em;
+    white-space: nowrap;
+    overflow-x: auto;
 }
 
-/* Keypad Layout */
+/* Scrollbar styles for webkit browsers */
+.input-line::-webkit-scrollbar, .result-line::-webkit-scrollbar {
+    height: 5px;
+}
+
+.input-line::-webkit-scrollbar-thumb, .result-line::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 5px;
+}
+
+.input-line::-webkit-scrollbar-track, .result-line::-webkit-scrollbar-track {
+    background: #333;
+}
+
+
 .keypad {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    width: 100%;
 }
 
-.advanced-scientific-keys {
-    grid-column: 1 / -1; /* Spans all columns */
-    display: grid;
-    grid-template-columns: repeat(6, 1fr); /* More columns for advanced keys */
-    gap: 12px;
-    margin-top: 10px; /* Space from main keypad */
-}
-
-/* Button Styling */
 .btn {
-    background-color: #555; /* Dark grey */
-    color: #ECF0F1; /* Light text */
+    background-color: #3B4E5F;
+    color: #ECF0F1;
     border: none;
-    border-radius: 8px;
-    padding: 18px 0;
+    border-radius: 10px;
+    padding: 20px 0;
     font-size: 1.5em;
     cursor: pointer;
-    transition: background-color 0.2s, transform 0.1s;
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .btn:hover {
-    background-color: #666; /* Lighter on hover */
+    background-color: #4A6075;
+    transform: translateY(-2px);
 }
 
 .btn:active {
-    background-color: #444; /* Darker when pressed */
-    transform: translateY(1px); /* Slight press effect */
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    background-color: #2C3E50;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
-
-/* Specific Button Colors */
-.btn.clear {
-    background-color: #C0392B; /* Dark red */
-}
-.btn.clear:hover { background-color: #E74C3C; }
-
-.btn.del {
-    background-color: #F39C12; /* Orange */
-}
-.btn.del:hover { background-color: #F8C471; }
 
 .btn.operator {
-    background-color: #34495E; /* Muted blue */
+    background-color: #F39C12; /* Orange */
 }
-.btn.operator:hover { background-color: #4A6581; }
+
+.btn.operator:hover {
+    background-color: #E67E22;
+}
 
 .btn.equals {
-    background-color: #27AE60; /* Green */
-    grid-column: span 2; /* Span two columns */
+    background-color: #4CAF50; /* Green */
+    grid-column: span 2; /* Make it span two columns */
 }
-.btn.equals:hover { background-color: #2ECC71; }
 
-.btn.func, .btn.mem {
-    background-color: #4A6581; /* Slightly lighter blue for functions */
-    font-size: 1.2em; /* Smaller font for function labels */
+.btn.equals:hover {
+    background-color: #45A049;
 }
-.btn.func:hover, .btn.mem:hover { background-color: #5F7D9B; }
 
-.btn.num {
-    background-color: #444; /* Slightly darker for numbers */
+.btn.clear {
+    background-color: #E74C3C; /* Red */
 }
-.btn.num:hover { background-color: #555; }
+
+.btn.clear:hover {
+    background-color: #C0392B;
+}
+
+.btn.del {
+    background-color: #95A5A6; /* Gray */
+    color: #2C3E50;
+}
+
+.btn.del:hover {
+    background-color: #7F8C8D;
+}
+
+.btn.func {
+    background-color: #5D6D7E; /* Darker blue-gray for functions */
+    font-size: 1.2em; /* Smaller font for functions */
+}
+
+.btn.func:hover {
+    background-color: #6C7A89;
+}
+
+/* Advanced scientific keys layout */
+.advanced-scientific-keys {
+    grid-column: 1 / -1; /* Spans all columns */
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for these specific keys */
+    gap: 15px;
+    margin-top: 15px; /* Space from the main keypad */
+}
+
+.btn.shift-btn {
+    background-color: #3498DB; /* Blue for Shift */
+}
+
+.btn.shift-btn:hover {
+    background-color: #2980B9;
+}
+
+/* Memory buttons */
+.btn.mem {
+    background-color: #2ECC71; /* Another shade of green */
+}
+.btn.mem:hover {
+    background-color: #27AE60;
+}
+
+/* Mode Selector */
+#mode-selector {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #555;
+    background-color: #444;
+    color: #ECF0F1;
+    font-size: 1.1em;
+    -webkit-appearance: none; /* Remove default arrow */
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23ECF0F1%22%20d%3D%22M287%2C197.9L156.6%2C67.5c-4.7-4.7-12.3-4.7-17%2C0L5.4%2C197.9c-4.7%2C4.7-4.7%2C12.3%2C0%2C17c4.7%2C4.7%2C12.3%2C4.7%2C17%2C0l125.6-125.6l125.6%2C125.6c4.7%2C4.7%2C12.3%2C4.7%2C17%2C0C291.7%2C210.2%2C291.7%2C202.6%2C287%2C197.9z%22%2F%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 10px top 50%;
+    background-size: 12px auto;
+}
 
 /* Mode Panels */
 .mode-panel {
-    background-color: #34495E;
-    color: #ECF0F1;
+    background-color: #3B4E5F;
+    border-radius: 10px;
     padding: 20px;
-    border-radius: 8px;
     margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .mode-panel h3 {
+    color: #4CAF50;
     margin-top: 0;
-    font-size: 1.4em;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    padding-bottom: 10px;
     margin-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 10px;
+}
+
+.mode-panel h4 {
+    color: #ECF0F1;
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.mode-panel.hidden {
+    display: none;
 }
 
 .mode-panel input[type="number"],
@@ -173,43 +237,67 @@ header h1 {
     border: 1px solid #555;
     background-color: #444;
     color: #ECF0F1;
-    font-size: 1.1em;
-}
-
-.mode-panel textarea {
-    min-height: 80px;
-    resize: vertical;
+    font-size: 1em;
 }
 
 .mode-panel button {
-    background-color: #2980B9;
+    background-color: #3498DB;
     color: white;
     border: none;
-    padding: 10px 15px;
     border-radius: 5px;
+    padding: 10px 15px;
+    margin-right: 10px;
+    margin-bottom: 10px;
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 10px;
+    transition: background-color 0.2s ease;
 }
 
 .mode-panel button:hover {
-    background-color: #3498DB;
+    background-color: #2980B9;
 }
 
-.hidden {
-    display: none;
+.equation-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
-/* Footer */
-footer {
+.equation-row input.coeff {
+    width: 60px;
+    margin: 0 5px;
     text-align: center;
-    color: #999;
+}
+
+.matrix-input-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* For 2x2 matrix */
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.matrix-input-grid input.matrix-cell {
+    width: 100%;
+    text-align: center;
+}
+
+.premium-note {
     font-size: 0.85em;
+    color: #aaa;
+    margin-top: 15px;
+    border-top: 1px dashed rgba(255,255,255,0.1);
+    padding-top: 10px;
+}
+
+footer {
+    width: 100%;
+    text-align: center;
     margin-top: 20px;
+    font-size: 0.9em;
+    color: #BDC3C7;
 }
 
 footer a {
-    color: #3498DB;
+    color: #4CAF50;
     text-decoration: none;
 }
 
@@ -217,91 +305,51 @@ footer a:hover {
     text-decoration: underline;
 }
 
-/* Responsiveness */
+
+/* Responsive adjustments */
 @media (max-width: 600px) {
     .calculator-container {
+        width: 95%;
         padding: 15px;
-        border-radius: 10px;
-        gap: 15px;
-    }
-
-    header h1 {
-        font-size: 1.3em;
-    }
-
-    #mode-selector {
-        padding: 6px 10px;
-        font-size: 0.9em;
-    }
-
-    .display {
-        min-height: 60px;
-        padding: 10px;
-    }
-
-    .input-line {
-        font-size: 1.3em;
-    }
-
-    .result-line {
-        font-size: 1.8em;
     }
 
     .keypad {
-        gap: 8px;
-    }
-
-    .advanced-scientific-keys {
-        grid-template-columns: repeat(4, 1fr); /* Adjust for smaller screens */
-        gap: 8px;
+        gap: 10px;
     }
 
     .btn {
         padding: 15px 0;
-        font-size: 1.3em;
-        border-radius: 6px;
+        font-size: 1.2em;
     }
 
-    .btn.func, .btn.mem {
-        font-size: 1em;
-    }
-
-    .mode-panel {
+    .display {
         padding: 15px;
     }
 
-    .mode-panel h3 {
+    .input-line {
         font-size: 1.2em;
     }
 
-    .mode-panel input, .mode-panel textarea {
-        font-size: 1em;
-        padding: 8px;
-    }
-
-    .mode-panel button {
-        padding: 8px 12px;
-        font-size: 0.9em;
-    }
-}
-
-/* Even smaller for very narrow phones */
-@media (max-width: 400px) {
-    .calculator-container {
-        padding: 10px;
-        gap: 10px;
-    }
-
-    .keypad {
-        gap: 6px;
-    }
-
-    .btn {
-        font-size: 1.2em;
-        padding: 12px 0;
+    .result-line {
+        font-size: 2em;
     }
 
     .advanced-scientific-keys {
-        grid-template-columns: repeat(3, 1fr); /* Even fewer columns */
+        gap: 10px;
+    }
+
+    .btn.equals {
+        grid-column: span 2; /* Still spans two columns */
+    }
+
+    .mode-panel input, .mode-panel textarea, .mode-panel select {
+        width: calc(100% - 10px);
+    }
+    .matrix-input-grid {
+        grid-template-columns: repeat(2, 1fr); /* Keep 2 columns for smaller screens */
+    }
+    select {
+        font-size: 1em;
+        padding: 8px;
     }
 }
