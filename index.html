@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Online Calculator</title>
     <link rel="stylesheet" href="style.css">
-    </head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.5.0/math.min.js"></script>
+</head>
 <body>
     <div class="calculator-container">
         <header>
@@ -14,8 +15,11 @@
                 <option value="scientific">Scientific</option>
                 <option value="equations">Equations</option>
                 <option value="functions">Functions</option>
+                <option value="matrices">Matrices</option>
+                <option value="unit-converter">Unit Converter</option>
                 <option value="statistics">Statistics</option>
                 <option value="sci-eng">Sci/Eng Tools</option>
+                <option value="premium">Premium Features</option>
             </select>
         </header>
 
@@ -26,7 +30,8 @@
             </div>
 
             <div id="equations-panel" class="mode-panel hidden">
-                <h3>Simultaneous Linear Equations (2x2)</h3>
+                <h3>Equation Solver</h3>
+                <h4>Simultaneous Linear Equations (2x2)</h4>
                 <div class="equation-row">
                     <input type="number" class="coeff" id="a1">x + <input type="number" class="coeff" id="b1">y = <input type="number" class="coeff" id="c1">
                 </div>
@@ -35,10 +40,16 @@
                 </div>
                 <button id="solve-linear">Solve</button>
                 <div id="linear-solution"></div>
-                </div>
+
+                <h4>Advanced Equation Types</h4>
+                <p>Input field for general equation (e.g., `sin(x) = x^2`) and numerical solver options.</p>
+                <input type="text" id="general-equation-input" placeholder="Enter equation (e.g., x^3 - 2x - 5 = 0)">
+                <button id="solve-general-equation">Solve Numerically</button>
+                <div id="general-equation-solution"></div>
+            </div>
 
             <div id="functions-panel" class="mode-panel hidden">
-                <h3>Function Definition</h3>
+                <h3>Function Definition & Evaluation</h3>
                 <label for="function-input">f(x) = </label><input type="text" id="function-input" placeholder="e.g., x^2 + 2*x - 1">
                 <button id="define-function">Define</button>
 
@@ -46,7 +57,12 @@
                 <label for="x-value">x = </label><input type="number" id="x-value">
                 <button id="evaluate-function">Calculate f(x)</button>
                 <div id="function-result"></div>
-                </div>
+
+                <h4>Advanced Function Operations</h4>
+                <p>Buttons for symbolic differentiation, integration (if math.js supports, or conceptual).</p>
+                <button id="derive-function">Derive f(x)</button>
+                <div id="derivative-result"></div>
+            </div>
 
             <div id="statistics-panel" class="mode-panel hidden">
                 <h3>Data Input</h3>
@@ -56,9 +72,83 @@
             </div>
 
             <div id="sci-eng-panel" class="mode-panel hidden">
-                <h3>Unit Conversions</h3>
-                <h3>Physical Constants</h3>
+                <h3>Scientific & Engineering Tools</h3>
+                <h4>Physical Constants</h4>
+                <div id="constants-display">
+                    <p>π = 3.1415926535...</p>
+                    <p>e = 2.7182818284...</p>
+                    <p>Speed of Light (c) = 299792458 m/s</p>
+                    <p>Planck's Constant (h) = 6.62607015 × 10^-34 J·s</p>
                 </div>
+            </div>
+
+            <div id="matrices-panel" class="mode-panel hidden">
+                <h3>Matrix Operations (2x2 Example)</h3>
+                <p>Define matrices and perform operations.</p>
+                <h4>Define Matrix A</h4>
+                <div class="matrix-input-grid">
+                    <input type="number" class="matrix-cell" id="ma11"> <input type="number" class="matrix-cell" id="ma12"><br>
+                    <input type="number" class="matrix-cell" id="ma21"> <input type="number" class="matrix-cell" id="ma22">
+                </div>
+                <button id="set-matrix-a">Set Matrix A</button>
+
+                <h4>Define Matrix B</h4>
+                <div class="matrix-input-grid">
+                    <input type="number" class="matrix-cell" id="mb11"> <input type="number" class="matrix-cell" id="mb12"><br>
+                    <input type="number" class="matrix-cell" id="mb21"> <input type="number" class="matrix-cell" id="mb22">
+                </div>
+                <button id="set-matrix-b">Set Matrix B</button>
+
+                <h4>Operations</h4>
+                <button id="matrix-add">A + B</button>
+                <button id="matrix-multiply">A * B</button>
+                <button id="matrix-inverse">Inverse A</button>
+                <button id="matrix-determinant">Determinant A</button>
+                <div id="matrix-result"></div>
+            </div>
+
+            <div id="unit-converter-panel" class="mode-panel hidden">
+                <h3>Unit Converter</h3>
+                <p>Convert values between various units.</p>
+                <input type="number" id="unit-value" placeholder="Value to convert">
+                <select id="from-unit-category">
+                    <option value="">Select Category</option>
+                    <option value="length">Length</option>
+                    <option value="mass">Mass</option>
+                    <option value="temperature">Temperature</option>
+                    <option value="volume">Volume</option>
+                    <option value="time">Time</option>
+                    <option value="area">Area</option>
+                    <option value="energy">Energy</option>
+                </select>
+                <select id="from-unit-select"></select>
+                <span>to</span>
+                <select id="to-unit-select"></select>
+                <button id="convert-unit">Convert</button>
+                <div id="unit-conversion-result"></div>
+            </div>
+
+            <div id="premium-panel" class="mode-panel hidden">
+                <h3>Premium Features</h3>
+                <h4>Currency Converter (Requires Internet Access)</h4>
+                <input type="number" id="currency-amount" placeholder="Amount">
+                <select id="from-currency"></select>
+                <span>to</span>
+                <select id="to-currency"></select>
+                <button id="convert-currency">Convert</button>
+                <div id="currency-result"></div>
+                <p class="premium-note">Note: Currency exchange rates are fetched from an external service and require internet connectivity. (Using mock data in preview)</p>
+
+                <h4>Snap & Solve AI (Requires Camera & Internet Access)</h4>
+                <p>Upload an image of a mathematical problem, and our AI will attempt to solve it.</p>
+                <input type="file" id="snap-solve-input" accept="image/*">
+                <button id="upload-snap-solve">Upload & Solve</button>
+                <div id="snap-solve-result"></div>
+                <p class="premium-note">Note: This feature uses advanced AI services and requires an active internet connection and may incur usage costs on the backend. (Conceptual in preview)</p>
+
+                <h4>Other Advancements:</h4>
+                <p>Please specify any other advanced features you'd like to conceptualize here (e.g., graphing, complex numbers, symbolic manipulation beyond surds).</p>
+            </div>
 
             <div class="keypad" id="main-keypad">
                 <button class="btn clear" data-action="clear">AC</button>
