@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Advanced Calculator User Manual</title>
-    <link rel="stylesheet" href="manual-style.css"> </head>
+    <link rel="stylesheet" href="manual-style.css">
+</head>
 <body>
     <div class="manual-container">
         <header>
@@ -14,8 +15,11 @@
                 <a href="#scientific">Scientific Mode</a> |
                 <a href="#equations">Equation Solver</a> |
                 <a href="#functions">Functions Mode</a> |
+                <a href="#matrices">Matrices</a> |
+                <a href="#unit-converter">Unit Converter</a> |
                 <a href="#statistics">Statistics Mode</a> |
                 <a href="#sci-eng">Sci/Eng Tools</a> |
+                <a href="#premium">Premium Features</a> |
                 <a href="#troubleshooting">Troubleshooting</a> |
                 <a href="index.html">Back to Calculator</a>
             </nav>
@@ -24,83 +28,187 @@
         <main>
             <section id="intro">
                 <h2>1. Introduction</h2>
-                <p>Welcome to the Advanced Online Calculator! This powerful tool is designed to assist students, engineers, and professionals with a wide range of mathematical computations, from basic arithmetic to complex equations, statistical analysis, and scientific calculations.</p>
+                <p>Welcome to the **Advanced Online Calculator**! This powerful tool is designed to assist students, engineers, and professionals with a wide range of mathematical computations, from basic arithmetic to complex equations, statistical analysis, and scientific calculations. This version includes expanded capabilities for matrices, comprehensive unit conversions, and powerful premium features.</p>
                 <p>This manual will guide you through all the features and modes of the calculator, helping you maximize its potential.</p>
             </section>
 
             <section id="scientific">
                 <h2>2. Scientific Mode</h2>
-                <p>This is the default mode, providing all standard scientific calculator functions.</p>
+                <p>This is the default mode, offering standard arithmetic and advanced scientific functions.</p>
                 <h3>2.1 Basic Operations</h3>
-                <p>Use the number pad (0-9) and operators (+, -, *, /) for basic calculations. Press '=' to get the result.</p>
-                <div class="example-code">
-                    <code>Input: 15 + 7 * (3 - 1)</code><br>
-                    <code>Result: 29</code>
-                </div>
+                <p>Use the number buttons (0-9) and operators (+, -, *, /) for standard calculations. Press `=` to get the result.</p>
+                <ul>
+                    <li>**AC (All Clear):** Clears the entire input and result.</li>
+                    <li>**DEL (Delete):** Removes the last character entered.</li>
+                    <li>**Ans (Answer):** Inserts the last calculated result into the current expression.</li>
+                </ul>
                 <h3>2.2 Powers and Roots</h3>
                 <ul>
-                    <li><strong>x^y:</strong> Use this button for general powers. Enter the base, press 'x^y', then the exponent. E.g., <code>2 x^y 3 = 8</code></li>
-                    <li><strong>√ (Square Root):</strong> Press the '√' button, then the number, then ')', then '='. E.g., <code>√ ( 9 ) = 3</code></li>
-                    <li><strong>Handling Surds:</strong> The calculator attempts to simplify surds. For example, entering <code>sqrt(8)</code> will display <code>2√2</code> if possible, or its decimal approximation if not. Operations like <code>2√3 + √3</code> will simplify to <code>3√3</code>.</li>
+                    <li>**x^y (Power):** Use this button for general powers. Enter the base, press `x^y`, then the exponent. E.g., `2 x^y 3 = 8`.</li>
+                    <li>**√ (Square Root):** Press the `√` button, then the number, then `)`, then `=`. E.g., `√ ( 9 ) = 3`.</li>
+                    <li>**Handling Surds:** The calculator attempts to simplify surds. For example, entering `sqrt(8)` will display `2√2` if possible, or its decimal approximation if not. Operations like `2√3 + √3` will simplify to `3√3`. (Note: Exact surd simplification is complex and depends on the underlying math library.)</li>
                 </ul>
-                </section>
+                <h3>2.3 Trigonometric Functions</h3>
+                <p>Use `sin`, `cos`, `tan` for sine, cosine, and tangent respectively. Remember to enclose arguments in parentheses.</p>
+                <div class="example-code">
+                    `sin(90)` (degrees) or `sin(pi/2)` (radians)
+                </div>
+                <h3>2.4 Logarithmic Functions</h3>
+                <ul>
+                    <li>**log:** Common logarithm (base 10).</li>
+                    <li>**ln:** Natural logarithm (base e).</li>
+                </ul>
+                <h3>2.5 Constants and Factorials</h3>
+                <ul>
+                    <li>**π (Pi):** Inserts the value of Pi.</li>
+                    <li>**e:** Inserts Euler's number.</li>
+                    <li>**x! (Factorial):** Calculates the factorial of a non-negative integer. E.g., `5!` would yield `120`.</li>
+                </ul>
+                <h3>2.6 Memory Functions</h3>
+                <ul>
+                    <li>**M+:** Adds the current display value to memory.</li>
+                    <li>**M-:** Subtracts the current display value from memory.</li>
+                    <li>**MR:** Recalls the value stored in memory to the display.</li>
+                    <li>**MC:** Clears the memory.</li>
+                </ul>
+            </section>
 
             <section id="equations">
                 <h2>3. Equation Solver Mode</h2>
                 <p>Switch to this mode using the "Mode" selector at the top. This mode helps you solve various types of equations.</p>
-                <h3>3.1 Simultaneous Linear Equations (2x2 and 3x3)</h3>
-                <p>Enter the coefficients for each equation in the provided input fields. For a 2x2 system:</p>
-                <p><code>a₁x + b₁y = c₁</code></p>
-                <p><code>a₂x + b₂y = c₂</code></p>
-                <p>Fill in the values for <code>a1, b1, c1, a2, b2, c2</code>, then click "Solve".</p>
-                <div class="example-code">
-                    <code>Equation 1: 2x + 3y = 7</code><br>
-                    <code>Equation 2: 4x + 1y = 9</code><br>
-                    <code>(Enter a1=2, b1=3, c1=7, a2=4, b2=1, c2=9)</code><br>
-                    <code>Solution: x = 2.0000, y = 1.0000</code>
+                <h3>3.1 Simultaneous Linear Equations (2x2)</h3>
+                <p>Enter the coefficients (a1, b1, c1, a2, b2, c2) for two linear equations of the form:</p>
+                <div class="equation-form">
+                    `a1x + b1y = c1`<br>
+                    `a2x + b2y = c2`
                 </div>
-                </section>
+                <p>Click "Solve" to find the values of x and y.</p>
+                <div class="example-code">
+                    Equation 1: `1x + 1y = 5`<br>
+                    Equation 2: `2x + 1y = 8`<br>
+                    Solution: `x = 3, y = 2`
+                </div>
+                <h3>3.2 Advanced Equation Types (Conceptual)</h3>
+                <p>The calculator can numerically solve more complex equations (e.g., trigonometric, exponential, non-linear) of the form `f(x) = 0`. Enter the equation in the general equation input field and click "Solve Numerically". You may need to provide an initial guess for some complex equations. (Note: The current implementation provides a conceptual placeholder for this advanced feature.)</p>
+                <div class="example-code">
+                    `Input: sin(x) - 0.5 = 0`<br>
+                    `Solution: x ≈ 0.5236 (for a guess near 0)`
+                </div>
+            </section>
 
             <section id="functions">
                 <h2>4. Functions Mode</h2>
-                <p>Define and evaluate functions, or generate tables of values.</p>
-                <h3>4.1 Defining a Function</h3>
-                <p>In the "Function Definition" section, type your function using 'x' as the variable (e.g., <code>x^2 + 2*x - 1</code>). Click "Define".</p>
-                <h3>4.2 Evaluating a Function</h3>
-                <p>Once a function is defined, enter a value for 'x' in the "Evaluate f(x)" section and click "Calculate f(x)".</p>
-                </section>
+                <p>Define and evaluate functions, generate tables of values, and perform symbolic operations.</p>
+                <h3>4.1 Defining and Evaluating Functions</h3>
+                <p>Enter a function of `x` (e.g., `x^2 + 2*x - 1`) in the `f(x) =` field and click "Define". Once defined, enter a value for `x` and click "Calculate f(x)" to evaluate the function at that point.</p>
+                <h3>4.2 Advanced Function Operations</h3>
+                <p>The calculator can perform symbolic **differentiation**. Enter your function in the definition field and click "Derive f(x)".</p>
+                <div class="example-code">
+                    `Function: x^3 + 2*x^2 - 5*x + 1`<br>
+                    `Derivative: 3x^2 + 4x - 5`
+                </div>
+                <p>*(Conceptual: Future updates may include symbolic integration and other advanced operations.)*</p>
+            </section>
+
+            <section id="matrices">
+                <h2>5. Matrix Operations</h2>
+                <p>Switch to this mode to perform operations on matrices. The current preview supports 2x2 matrices.</p>
+                <h3>5.1 Defining Matrices</h3>
+                <p>Use the input grids to define **Matrix A** and **Matrix B**. Enter the numerical values for each cell, then click "Set Matrix A" or "Set Matrix B" to store them.</p>
+                <h3>5.2 Matrix Arithmetic</h3>
+                <ul>
+                    <li>**Addition (A + B):** Adds corresponding elements of two matrices. Both matrices must have the same dimensions.</li>
+                    <li>**Multiplication (A * B):** Performs matrix multiplication. The number of columns in A must equal the number of rows in B.</li>
+                </ul>
+                <h3>5.3 Matrix Properties</h3>
+                <ul>
+                    <li>**Inverse (Inverse A):** Calculates the inverse of a square matrix.</li>
+                    <li>**Determinant (Determinant A):** Computes the determinant of a square matrix.</li>
+                </ul>
+                <div class="example-code">
+                    `Matrix A: [[1, 2], [3, 4]]`<br>
+                    `Determinant A: -2`
+                </div>
+            </section>
+
+            <section id="unit-converter">
+                <h2>6. Comprehensive Unit Converter</h2>
+                <p>Convert values between a vast array of units across different categories.</p>
+                <h3>6.1 How to Use</h3>
+                <ol>
+                    <li>Enter the numerical **Value to convert**.</li>
+                    <li>Select the **"Category"** of the unit (e.g., Length, Mass, Temperature).</li>
+                    <li>Choose the **"From Unit"** from the first dropdown.</li>
+                    <li>Choose the **"To Unit"** from the second dropdown.</li>
+                    <li>Click **"Convert"** to see the result.</li>
+                </ol>
+                <div class="example-code">
+                    `Value: 100`<br>
+                    `From Unit: meter`<br>
+                    `To Unit: foot`<br>
+                    `Result: 100 meter = 328.084 foot`
+                </div>
+                <h3>6.2 Supported Units & Symbols</h3>
+                <p>The converter supports a wide range of standard SI and imperial units across categories like Length, Mass, Temperature, Volume, Time, Area, and Energy. You can also use common mathematical and physical symbols directly in the scientific calculator mode (e.g., `π` for Pi, `e` for Euler's number). For a full list of supported units and constants, refer to the **Scientific & Engineering Tools** section.</p>
+            </section>
 
             <section id="statistics">
-                <h2>5. Statistics Mode</h2>
-                <p>Enter a set of data points to calculate various statistical measures.</p>
-                <h3>5.1 Entering Data</h3>
-                <p>Type your numbers into the "Data Input" text area. Separate numbers by commas or by placing them on new lines.</p>
+                <h2>7. Statistics Mode</h2>
+                <p>Enter a series of numbers (separated by commas or newlines) into the text area and click "Analyze" to calculate various statistical measures.</p>
+                <h3>7.1 Supported Statistics</h3>
+                <ul>
+                    <li>**Count:** Number of data points.</li>
+                    <li>**Mean:** The average value.</li>
+                    <li>**Median:** The middle value when data is ordered.</li>
+                    <li>**Standard Deviation:** A measure of the dispersion of data points.</li>
+                    <li>**Variance:** The average of the squared differences from the Mean.</li>
+                    <li>**Min:** The smallest value in the dataset.</li>
+                    <li>**Max:** The largest value in the dataset.</li>
+                    <li>**Sum:** The total sum of all data points.</li>
+                </ul>
                 <div class="example-code">
-                    <code>Input: 10, 12, 12, 15, 17, 18, 20</code>
+                    `Input: 10, 20, 30, 40, 50`<br>
+                    `Mean: 30.0000`<br>
+                    `Median: 30.0000`<br>
+                    `Std Dev: 15.8114`
                 </div>
-                <h3>5.2 Analyzing Data</h3>
-                <p>Click "Analyze" to see results for Mean, Median, Mode, Standard Deviation, Variance, Min, Max, and Count.</p>
             </section>
 
             <section id="sci-eng">
-                <h2>6. Scientific & Engineering Tools</h2>
-                <p>This mode provides access to common physical constants and unit conversion tools.</p>
-                <h3>6.1 Unit Conversions</h3>
-                <p>Select the unit category (e.g., Length), then choose your "From Unit" and "To Unit". Enter the value you wish to convert and click "Convert".</p>
-                <h3>6.2 Physical Constants</h3>
-                <p>A list of frequently used physical constants (e.g., Speed of Light, Avogadro's Number) is available for quick reference.</p>
+                <h2>8. Scientific & Engineering Tools</h2>
+                <p>This mode provides access to common physical constants and other scientific utilities.</p>
+                <h3>8.1 Physical Constants & Symbols</h3>
+                <p>Access a comprehensive list of fundamental physical constants and their values (e.g., speed of light (c), Planck's constant (h), Avogadro's number (NA), gravitational constant (G)). These can be inserted directly into your scientific calculations.</p>
+                <div class="example-code">
+                    `Input: 2 * pi * 5`<br>
+                    `Result: 31.4159...`
+                </div>
+                <p>*(Conceptual: A dedicated table or search function for more constants would be ideal here.)*</p>
+            </section>
+
+            <section id="premium">
+                <h2>9. Premium Features</h2>
+                <p>Unlock advanced functionalities with our premium version, designed for ultimate convenience and power. These features are conceptual in this preview and demonstrate how they would work with real data/AI integration.</p>
+                <h3>9.1 Currency Converter</h3>
+                <p>Get **real-time currency exchange rates** for a wide range of global currencies. Simply enter the amount, select the "From" and "To" currencies, and click "Convert".</p>
+                <p class="premium-note">**Note:** This feature requires an active internet connection to fetch the latest exchange rates from external financial services. The preview uses mock data for demonstration.</p>
+                <h3>9.2 Snap & Solve AI</h3>
+                <p>Revolutionize your problem-solving! With **Snap & Solve**, you can take a picture of any mathematical problem (handwritten or printed) and upload it. Our advanced AI will analyze the image, interpret the problem, and provide the solution.</p>
+                <p class="premium-note">**Note:** This highly advanced feature leverages cloud-based AI and image processing technologies, requiring both internet access and potentially a premium subscription. It is under continuous development for enhanced accuracy and problem-solving capabilities. This is purely conceptual in the preview.</p>
+                <h3>9.3 Other Advancements</h3>
+                <p>Our premium roadmap includes features like advanced graphing capabilities for complex functions, symbolic integration, and more comprehensive solvers for differential equations. Stay tuned for updates!</p>
             </section>
 
             <section id="troubleshooting">
-                <h2>7. Troubleshooting & FAQs</h2>
+                <h2>10. Troubleshooting & FAQs</h2>
+                <p>If you encounter issues, try these common solutions:</p>
                 <ul>
-                    <li><strong>"Why is my answer a decimal and not a surd?"</strong><br>
-                        The calculator attempts surd simplification for certain operations (like square roots). However, not all expressions can be simplified into exact surd form, or the result might be irrational in a way that doesn't simplify nicely (e.g., π). If you expect an exact surd and don't get one, it might not be mathematically possible to represent it that way, or the expression is too complex for the calculator's current simplification engine.</li>
-                    <li><strong>"My equation isn't solving."</strong><br>
-                        Check your input carefully for typos. For linear equations, ensure the system has a unique solution (i.e., not parallel or identical lines). For general equations, a good initial guess can sometimes help.</li>
-                    <li><strong>"Error" message displayed.</strong><br>
-                        This usually indicates a syntax error in your input (e.g., unmatched parentheses, invalid operation like division by zero, or an operation on non-numbers). Clear the display and re-enter.</li>
+                    <li>**"Error" Displayed:** Check your input for syntax errors (e.g., unmatched parentheses, invalid operations).</li>
+                    <li>**Incorrect Results:** Ensure you're in the correct mode and have used the functions as described in the manual. Check your input values carefully.</li>
+                    <li>**Feature Not Working:** For premium features like currency conversion or Snap & Solve, ensure you have an active internet connection. Remember these are conceptual in the preview and illustrate intended functionality.</li>
+                    <li>**Responsiveness Issues:** Clear your browser cache or try a different browser.</li>
                 </ul>
+                <p>For further assistance, please refer to future updates or contact support (conceptual).</p>
             </section>
         </main>
 
